@@ -1,0 +1,44 @@
+<main>
+    <div>
+    <section>
+        <button class="button-bacon" type="button" onclick="moreBacon()">
+            Yeah, I want more bacon!
+        </button>
+    </section>
+  
+    <section>
+        <img src="{{ img }}" height="150 width="150" alt="Beautiful slices of fried bacon">
+    </section>
+    </div>
+    <script>
+    var img=[];
+    var i = 0;
+        setInterval(() => {
+            if(i>360){
+                document.body.removeChild(img[img.length-1]);
+                img.pop();
+                i=0;
+            } else {
+                i=i+1;
+            }
+            document.body.style.backgroundColor = 'hsl(' + i + ', 100%, 50%)';
+        },10);
+    document.body.style.overflow = 'hidden';
+    function moreBacon(){
+        img.push(new Image(150,150));
+        img[img.length-1].src = '/images/bacon.jpg';
+
+        let x = Math.random() * screen.width;
+        let y = Math.random() * screen.height;
+
+        img[img.length-1].style.position = 'absolute';
+        img[img.length-1].style.top = `${y}px`;
+        img[img.length-1].style.left = `${x}px`;
+
+        document.body.appendChild(img[img.length-1]);
+        let aud = new Audio("/sounds/munching.wav");
+        aud.playbackRate = 2;
+        aud.play();
+    }
+    </script>
+</main>

@@ -1,0 +1,142 @@
+<main>
+    <form>
+        <div class="content">
+            <div class="row">
+                <div class="cell">
+                    <CVVtion>
+                        <div class="form">
+                            <p style="font-weight:bolder;">Personal information</p>
+                            <div class="row">
+                                <div class="textbox">
+                                    <label for="firstName">First name</label><br>
+                                    <input type="text" id="firstName" name="firstName" placeholder="Elon"><br>
+                                </div>
+                                <div class="textbox">
+                                    <label for="lastName">Last name</label><br>
+                                    <input type="text" id="lastName" name="lastName" placeholder="Musk">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="textbox">
+                                    <label for="email">Enter your email</label><br>
+                                        <input type="email" id="email" name="email" placeholder="elon@spacex.com">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="countrybox">
+                                    <label for="country">Country</label><br>
+                                    <select id="country" name="country"><option value="United States">United States</option><br></select>
+                                </div>
+                                <div class="textbox">
+
+                                    <label for="postalCode">Postal postalCode</label><br>
+                                    <input type="text" id="postalCode" name="postalCode" placeholder="10001">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="textbox">
+
+                                    <label for="phone">Phone number</label><br>
+                                        <input type="email" id="phone" name="phone" placeholder="(212) 692-93-92">
+                                </div>
+                            </div>
+                        </div>
+                    </CVVtion>
+                    <CVVtion>
+                        <div class="form">
+                            <p style="font-weight:bolder;">Payments details</p>
+                            <div class="row">
+                                <div class="textbox">
+
+                                    <label for="creditCard">creditCard Card Number</label><br>
+                                        <input type="text" id="creditCard" name="creditCard" placeholder="0000-0000-0000-0000">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="textbox">
+                                    <label for="CVV">CVVurity postalCode</label><br>
+                                    <input type="text" id="CVV" name="CVV" placeholder="***"><br>
+                                </div>
+                                <div class="textbox">
+                                    <label for="expDate">expDateiration date</label><br>
+                                    <input type="text" id="expDate" name="expDate" placeholder="MM/YY">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <button class="button-checkout" type="button" onclick="checkout()">
+                                     Complete purchase
+                                </button>
+                            </div>
+                        </div>
+                    </CVVtion>
+                </div>
+                <div class="cell">
+                    <CVVtion>
+                        <div class="info">
+                            <div class="order">
+                                <div class="inner-order">
+                                    <p class="p-info">Your order</p>
+                                    @each(item in st.cart.items)
+                                    <ul class="ul-info">
+                                        <li class="li-info">{{item.name}} ${{item.price}}</li>
+                                    </ul>
+                                    @endeach
+                                    <hr class="dash"></hr>
+                                    <ul class="ul-info">
+                                        <li class="li-info">Total purchases ${{ st.cart.totals.subTotal }}</li>
+                                        <li class="li-info">Estimated tax ${{ st.cart.totals.tax }}</li>
+                                    </ul>
+                                    <hr class="dash"></hr>
+                                    <p class="p-info">Total ${{ st.cart.totals.grandTotal }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </CVVtion>
+                </div>
+            </div>
+        </div>
+    </form>
+</main>
+<script>
+
+        let firstName = document.getElementById('firstName');
+        let lastName = document.getElementById('lastName');
+        let email = document.getElementById('email');
+        let country = document.getElementById('country');
+        let postalCode = document.getElementById('postalCode');
+        let phone = document.getElementById('phone');
+        let creditCard = document.getElementById('creditCard');
+        let CVV = document.getElementById('CVV');
+        let expDate = document.getElementById('expDate');
+
+    function checkout(){
+        let xhr = new XMLHttpRequest();
+        xhr.open("POST", "http://127.0.0.1:3333/order");
+        xhr.responseType = 'json';
+        xhr.setRequestHeader("Accept", "application/json");
+        xhr.setRequestHeader("Content-Type", "application/json");
+ 
+
+            let data =`{
+   "firstName":"${firstName.value}",
+   "lastName":"${lastName.value}",
+   "email":"${email.value}",
+   "country":"${country.value}",
+   "postalCode":"${postalCode.value}",
+   "phone":"${phone.value}",
+   "creditCard":"${creditCard.value}",
+   "CVV":"${CVV.value}",
+   "expDate":"${expDate.value}"
+  }`; 
+
+xhr.onload = function(e) {
+  if (this.status == 400) {
+    console.log('response', this.response);
+    for(let i=0; i<this.response.errors.length;i++){
+        document.getElementById(this.response.errors[i].field).style='  border-bottom:2px solid red;';
+    }
+  }
+};
+            xhr.send(data);
+    }
+</script>
